@@ -1,11 +1,13 @@
 import Button from '@mui/material/Button'
 import { pink } from '@mui/material/colors'
 import HomeIcon from '@mui/icons-material/Home'
+import Typography from '@mui/material/Typography'
 
 function App() {
   return (
     <>
       <div>Hello world!</div>
+      <Typography variant='body1' color="text.secondary">ReactJS</Typography>
       <Button variant="text">Text</Button>
       <Button variant="contained">Contained</Button>
       <Button variant="outlined">Outlined</Button>
