@@ -6,8 +6,8 @@ import {
 // Create a theme instance.
 const theme = extendTheme({
   trello: {
-    appBarHeight: '48px',
-    boardBarHeight: '58px'
+    appBarHeight: '58px',
+    boardBarHeight: '60px'
   },
   colorSchemes: {
     light: {
