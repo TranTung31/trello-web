@@ -32,7 +32,7 @@ function Profiles() {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar sx={{ width: 30, height: 30 }} src='https://fullstack.edu.vn/static/media/f8-icon.18cd71cfcfa33566a22b.png'/>
+          <Avatar sx={{ width: 34, height: 34 }} src='https://fullstack.edu.vn/static/media/f8-icon.18cd71cfcfa33566a22b.png'/>
         </IconButton>
       </Tooltip>
       <Menu
