@@ -29,7 +29,6 @@ function BoardBar() {
     <Box sx={{
       width: '100%',
       height: (theme) => theme.trello.boardBarHeight,
-      borderBottom: '1px solid white',
       backgroundColor: 'white',
       paddingX: 2,
       display: 'flex',
