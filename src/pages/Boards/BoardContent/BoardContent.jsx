@@ -8,9 +8,9 @@ import {
   defaultDropAnimationSideEffects,
   closestCorners,
   pointerWithin,
-  rectIntersection,
-  getFirstCollision,
-  closestCenter
+  // rectIntersection,
+  getFirstCollision
+  // closestCenter
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import Box from '@mui/material/Box'
@@ -276,18 +276,24 @@ function BoardContent({ board }) {
     }
 
     const pointerIntersections = pointerWithin(args)
-    const intersections = !!pointerIntersections.length
-      ? pointerIntersections
-      : rectIntersection(args)
+
+    // Nếu pointerIntersections là mảng rỗng thì return luôn không làm gì hết
+    // Fix trường hợp kéo card với image lớn phía trên cùng ngoài khu vực column
+    if (!pointerIntersections?.length) return
+
+    // Thuật toán phát hiện va chạm sẽ trả về một mảng các va chạm ở đây (không cần bước này nữa)
+    // const intersections = !!pointerIntersections.length
+    //   ? pointerIntersections
+    //   : rectIntersection(args)
 
     // Tìm overId đầu tiên trong intersections
-    let overId = getFirstCollision(intersections, 'id')
+    let overId = getFirstCollision(pointerIntersections, 'id')
 
     if (overId) {
       const checkColumn = orderedColumns.find(column => column._id === overId)
 
       if (checkColumn) {
-        overId = closestCenter({
+        overId = closestCorners({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => {
             return (container.id !== overId) && (checkColumn?.cardOrderIds?.includes(container.id))
