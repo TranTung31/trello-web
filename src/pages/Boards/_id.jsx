@@ -22,8 +22,8 @@ function Board() {
     // disableGutters maxWidth={true} giúp chiều rộng của Container chiếm full màn hình
     <Container disableGutters maxWidth={true} sx={{ height: '100vh' }}>
       <AppBar />
-      <BoardBar board={board}/>
-      <BoardContent board={board}/>
+      <BoardBar board={mockData?.board}/>
+      <BoardContent board={mockData?.board}/>
     </Container>
   )
 }
