@@ -22,6 +22,7 @@ import { mapOrder } from '~/utils/sorts'
 import ListCards from './ListCards/ListCards'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
+import { toast } from 'react-toastify'
 
 function Column({ column }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
@@ -51,13 +52,12 @@ function Column({ column }) {
 
   const handleAddNewCard = () => {
     if (!newCardTitle) {
-      alert('Please enter card title!')
+      toast.error('Please enter card title!', { position: 'bottom-right' })
       return
     }
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
-    // console.log('newColumnTitle: ', newColumnTitle)
   }
 
   return (
