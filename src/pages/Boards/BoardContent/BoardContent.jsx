@@ -1,7 +1,7 @@
 import {
   DndContext,
-  MouseSensor,
-  TouchSensor,
+  // MouseSensor,
+  // TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -12,6 +12,7 @@ import {
   getFirstCollision
   // closestCenter
 } from '@dnd-kit/core'
+import { MouseSensor, TouchSensor } from '~/customLibs/DndKitSensor'
 import { arrayMove } from '@dnd-kit/sortable'
 import Box from '@mui/material/Box'
 import { useCallback, useEffect, useRef, useState } from 'react'
