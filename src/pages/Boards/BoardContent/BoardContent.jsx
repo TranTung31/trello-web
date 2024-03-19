@@ -28,8 +28,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
 }
 
 function BoardContent({ board, addNewColumn, addNewCard }) {
-  // Nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: 'none' ở
-  // những phần tử kéo thả nhưng còn bug
+  // Nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: 'none' ở những phần tử kéo thả nhưng còn bug
 
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
 
@@ -149,8 +148,7 @@ function BoardContent({ board, addNewColumn, addNewCard }) {
 
     const { active, over } = event
 
-    // Cần đảm bảo nếu không tồn tại active hoặc over (khi kéo ra ngoài phạm vi container) thì
-    // không làm gì (tránh crash trang)
+    // Cần đảm bảo nếu không tồn tại active hoặc over (khi kéo ra ngoài phạm vi container) thì không làm gì (tránh crash trang)
     if (!active || !over) return
 
     // activeDraggingCard là card đang được kéo
@@ -164,10 +162,8 @@ function BoardContent({ board, addNewColumn, addNewCard }) {
 
     if (!activeColumn || !overColumn) return
 
-    // Xử lý logic ở đây chỉ khi kéo card qua 2 columns khác nhau, còn nếu kéo card trong chính column
-    // ban đầu của nó thì không làm gì
-    // Vì đây đang đoạn xử lý lúc kéo (handleDragOver), còn xử lý lúc kéo xong xuôi thì nó lại là vấn đề
-    // khác ở (handleDragEnd)
+    // Xử lý logic ở đây chỉ khi kéo card qua 2 columns khác nhau, còn nếu kéo card trong chính column ban đầu của nó thì không làm gì
+    // Vì đây đang đoạn xử lý lúc kéo (handleDragOver), còn xử lý lúc kéo xong xuôi thì nó lại là vấn đề khác ở (handleDragEnd)
     if (activeColumn._id !== overColumn._id) {
       moveCardBetweenDifferentColumns(
         overColumn,
@@ -319,9 +315,7 @@ function BoardContent({ board, addNewColumn, addNewCard }) {
   return (
     <DndContext
       sensors={sensors}
-      // Thuật toán phát hiện va chạm (nếu không có nó thì card với cover lớn sẽ không kéo qua Column được
-      // vì lúc này nó đang bị conflict giữa card và column), chúng ta sẽ dùng closestCorners thay vì closestCenter
-      // collisionDetection={closestCorners}
+      // Thuật toán phát hiện va chạm (nếu không có nó thì card với cover lớn sẽ không kéo qua Column được vì lúc này nó đang bị conflict giữa card và column), chúng ta sẽ dùng closestCorners thay vì closestCenter collisionDetection={closestCorners}
 
       // Custom thuật toán phát hiện va chạm
       collisionDetection={collisionDetectionStrategy}
