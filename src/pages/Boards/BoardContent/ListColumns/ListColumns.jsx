@@ -8,16 +8,27 @@ import { useState } from 'react'
 import Column from './Column/Column'
 import { toast } from 'react-toastify'
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, addNewColumn, addNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const handleAddNewColumn = () => {
+  const handleAddNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter column title!')
       return
     }
+
+    const newColumnData = {
+      title: newColumnTitle
+    }
+
+    /*
+      - Gọi lên props function addNewColumn nằm ở component cha cao nhất
+      - Có thể đưa dữ liệu Board ra Redux Global Store lúc ý có thể gọi luôn API ở đây thay vì phải
+      gọi ngược lên component cha ở phía trên
+    */
+    await addNewColumn(newColumnData)
 
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -36,7 +47,7 @@ function ListColumns({ columns }) {
           '&::-webkit-scrollbar-track': { m: 2 }
         }}
       >
-        {columns?.map(column => <Column key={column._id} column={column}/>)}
+        {columns?.map(column => <Column key={column._id} column={column} addNewCard={addNewCard}/>)}
 
         {!openNewColumnForm ? (
           <Box
