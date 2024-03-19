@@ -185,6 +185,7 @@ function Column({ column, addNewCard }) {
                 label="Enter card title..."
                 type="text"
                 size='small'
+                data-no-dnd='true'
                 autoFocus
                 value={newCardTitle}
                 onChange={(e) => setNewCardTitle(e.target.value)}
@@ -210,6 +211,7 @@ function Column({ column, addNewCard }) {
                 variant='contained'
                 size='small'
                 color='success'
+                data-no-dnd='true'
                 sx={{
                   boxShadow: 'none',
                   border: '0.5px solid',
