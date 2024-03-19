@@ -4,7 +4,7 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { mockData } from '~/apis/mock-data'
 import { useEffect, useState } from 'react'
-import { fetchBoardDetailAPI } from '~/apis'
+import { fetchBoardDetailAPI, fetchAddColumnAPI, fetchAddCardAPI } from '~/apis'
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -17,13 +17,29 @@ function Board() {
     })
   }, [])
 
+  const addNewColumn = async (data) => {
+    const newColumn = {
+      ...data,
+      boardId: board._id
+    }
+    const result = await fetchAddColumnAPI(newColumn)
+  }
+
+  const addNewCard = async (data) => {
+    const newCard = {
+      ...data,
+      boardId: board._id
+    }
+    const result = await fetchAddCardAPI(newCard)
+  }
+
   return (
     // 100vh là chiều cao tự thay đổi theo độ dài của trình duyệt
-    // disableGutters maxWidth={true} giúp chiều rộng của Container chiếm full màn hình
-    <Container disableGutters maxWidth={true} sx={{ height: '100vh' }}>
+    // disableGutters maxWidth={false} giúp chiều rộng của Container chiếm full màn hình
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
-      <BoardBar board={mockData?.board}/>
-      <BoardContent board={mockData?.board}/>
+      <BoardBar board={board}/>
+      <BoardContent board={board} addNewColumn={addNewColumn} addNewCard={addNewCard}/>
     </Container>
   )
 }

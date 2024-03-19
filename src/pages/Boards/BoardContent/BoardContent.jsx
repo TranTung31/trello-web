@@ -27,7 +27,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
 
-function BoardContent({ board }) {
+function BoardContent({ board, addNewColumn, addNewCard }) {
   // Nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: 'none' ở
   // những phần tử kéo thả nhưng còn bug
 
@@ -335,7 +335,7 @@ function BoardContent({ board }) {
         bgcolor: (theme) => theme.palette.mode === 'dark' ? '#34495e' : 'primary.main',
         p: '10px 0'
       }}>
-        <ListColumns columns={orderedColumns}/>
+        <ListColumns columns={orderedColumns} addNewColumn={addNewColumn} addNewCard={addNewCard}/>
         <DragOverlay dropAnimation={customDropAnimation}>
           {!activeDragItemType && null}
           {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData}/>}
