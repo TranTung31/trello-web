@@ -6,7 +6,7 @@ import { mockData } from '~/apis/mock-data'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
-import { fetchBoardDetailAPI, fetchAddColumnAPI, fetchAddCardAPI } from '~/apis'
+import { fetchBoardDetailAPI, fetchAddColumnAPI, fetchAddCardAPI, updateBoardDetailAPI } from '~/apis'
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -65,13 +65,30 @@ function Board() {
     setBoard(newBoard)
   }
 
+  const moveColumns = async (dndOrderedColumns) => {
+    const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
+
+    const newBoard = { ...board }
+    newBoard.columns = dndOrderedColumns
+    newBoard.columnOrderIds = dndOrderedColumnsIds
+    setBoard(newBoard)
+
+    const res = await updateBoardDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+    console.log('res: ', res)
+  }
+
   return (
     // 100vh là chiều cao tự thay đổi theo độ dài của trình duyệt
     // disableGutters maxWidth={false} giúp chiều rộng của Container chiếm full màn hình
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
       <AppBar />
       <BoardBar board={board}/>
-      <BoardContent board={board} addNewColumn={addNewColumn} addNewCard={addNewCard}/>
+      <BoardContent
+        board={board}
+        addNewColumn={addNewColumn}
+        addNewCard={addNewCard}
+        moveColumns={moveColumns}
+      />
     </Container>
   )
 }
