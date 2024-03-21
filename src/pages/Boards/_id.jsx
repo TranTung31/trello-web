@@ -6,7 +6,15 @@ import { mockData } from '~/apis/mock-data'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
-import { fetchBoardDetailAPI, fetchAddColumnAPI, fetchAddCardAPI, updateBoardDetailAPI } from '~/apis'
+import { fetchBoardDetailAPI,
+  fetchAddColumnAPI,
+  fetchAddCardAPI,
+  updateBoardDetailAPI,
+  updateColumnDetailAPI
+} from '~/apis'
+import { mapOrder } from '~/utils/sorts'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -15,14 +23,21 @@ function Board() {
     const boardId = '65f5ac5e67281a9297c137b6'
 
     fetchBoardDetailAPI(boardId).then(board => {
+      // Sắp xếp các columns ở đây trước khi đưa dữ liệu xuống dưới các component con
+      board.columns = mapOrder(board.columns, board.columnOrderIds, '_id')
+
       // Tạo Card giữ chỗ khi mảng cards rỗng => tránh việc khi kéo card vô column rỗng gây crash trang
       board.columns.forEach((column) => {
         if (isEmpty(column.cards)) {
           column.cards.push(generatePlaceholderCard(column))
           column.cardOrderIds.push(generatePlaceholderCard(column)._id)
+        } else {
+          // Sắp xếp các cards ở đây trước khi đưa dữ liệu xuống dưới các component con
+          column.cards = mapOrder(column.cards, column.cardOrderIds, '_id')
         }
       })
 
+      console.log('board origin: ', board)
       setBoard(board)
     })
   }, [])
@@ -60,21 +75,72 @@ function Board() {
 
     const newBoard = { ...board }
     const columnFind = newBoard.columns.find((column) => column._id === createdCard.columnId)
-    columnFind.cards.push(createdCard)
-    columnFind.cardOrderIds.push(createdCard._id)
+    if (columnFind) {
+      columnFind.cards.push(createdCard)
+      columnFind.cardOrderIds.push(createdCard._id)
+    }
     setBoard(newBoard)
   }
 
-  const moveColumns = async (dndOrderedColumns) => {
+  const moveColumns = (dndOrderedColumns) => {
     const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
 
+    // Update cho chuẩn dữ liệu state board
     const newBoard = { ...board }
     newBoard.columns = dndOrderedColumns
     newBoard.columnOrderIds = dndOrderedColumnsIds
     setBoard(newBoard)
 
-    const res = await updateBoardDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
-    console.log('res: ', res)
+    // Khi nào call API mà muốn nhận response trả về thì mới async await function moveColumns (.then .catch tương tự)
+    // Call API
+    updateBoardDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+  }
+
+  // Khi di chuyển card trong cùng 1 column, chỉ cần gọi API cập nhật lại mảng cardOrderIds của column chứa nó (thay đổi vị trí trong mảng)
+  const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardIds, columnId) => {
+    // Update cho chuẩn dữ liệu state board
+    const newBoard = { ...board }
+    const columnToUpdate = newBoard.columns.find((column) => column._id === columnId)
+    if (columnToUpdate) {
+      columnToUpdate.cards = dndOrderedCards
+      columnToUpdate.cardOrderIds = dndOrderedCardIds
+    }
+    setBoard(newBoard)
+
+    // Call API
+    updateColumnDetailAPI(columnId, { cardOrderIds: dndOrderedCardIds })
+  }
+
+  if (!board) {
+    return (
+      <Box
+        sx={{
+          width: '100%',
+          height: '100vh',
+          bgcolor: '#ecf0f1',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2
+        }}
+      >
+        <svg width={0} height={0}>
+          <defs>
+            <linearGradient id="my_gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#e01cd5" />
+              <stop offset="100%" stopColor="#1CB5E0" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <CircularProgress
+          sx={{
+            'svg circle': { stroke: 'url(#my_gradient)' }
+          }}
+          size={60}
+        />
+        <h3>Loading Board</h3>
+      </Box>
+    )
   }
 
   return (
@@ -88,6 +154,7 @@ function Board() {
         addNewColumn={addNewColumn}
         addNewCard={addNewCard}
         moveColumns={moveColumns}
+        moveCardInTheSameColumn={moveCardInTheSameColumn}
       />
     </Container>
   )
