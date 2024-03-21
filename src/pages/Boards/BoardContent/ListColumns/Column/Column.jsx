@@ -25,6 +25,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { toast } from 'react-toastify'
 
 function Column({ column, addNewCard }) {
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: column._id, data: { ...column } })
   const dndKitColumnStyles = {
@@ -44,13 +45,13 @@ function Column({ column, addNewCard }) {
     setAnchorEl(null)
   }
 
-  const cards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  const cards = column.cards
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const handleAddNewCard = async () => {
+  const handleAddNewCard = () => {
     if (!newCardTitle) {
       toast.error('Please enter card title!', { position: 'bottom-right' })
       return
@@ -61,7 +62,8 @@ function Column({ column, addNewCard }) {
       columnId: column._id
     }
 
-    await addNewCard(newCardData)
+    // Call API
+    addNewCard(newCardData)
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
