@@ -38,7 +38,7 @@ function Board() {
         }
       })
 
-      console.log('board origin: ', board)
+      // console.log('board origin: ', board)
       setBoard(board)
     })
   }, [])
@@ -76,7 +76,11 @@ function Board() {
 
     const newBoard = { ...board }
     const columnFind = newBoard.columns.find((column) => column._id === createdCard.columnId)
-    if (columnFind) {
+    // Xử lý trường hợp tạo mới card trong 1 column rỗng, khi đó sẽ có card giữ chỗ placeholder-card cần xóa đi để đảm bảo đúng logic. Ngược lại nếu tạo mới card trong 1 column đã có card thì sẽ push vào cuối mảng
+    if (columnFind.cards.some(card => card.FE_PlaceholderCard)) {
+      columnFind.cards = [createdCard]
+      columnFind.cardOrderIds = [createdCard._id]
+    } else {
       columnFind.cards.push(createdCard)
       columnFind.cardOrderIds.push(createdCard._id)
     }
@@ -131,10 +135,16 @@ function Board() {
     newBoard.columnOrderIds = dndOrderedColumnsIds
     setBoard(newBoard)
 
+    let prevCardOrderIds = dndOrderedColumns.find(column => column._id === prevColumnId).cardOrderIds
+    // Xử lý bug khi kéo card sang column khác, column cũ trống chỉ có card giữ chỗ placeholder-card khi đó cần xóa card giữ chỗ có placeholder-card khỏi mảng cardOrderIds trước khi gửi dữ liệu cho back-end lưu
+    if (prevCardOrderIds[0].includes('placeholder-card')) {
+      prevCardOrderIds = []
+    }
+
     moveCardToDifferentColumnAPI({
       currentCardId,
       prevColumnId,
-      prevCardOrderIds: dndOrderedColumns.find(column => column._id === prevColumnId).cardOrderIds,
+      prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(column => column._id === nextColumnId).cardOrderIds
     })
