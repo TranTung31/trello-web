@@ -7,7 +7,7 @@ export const fetchBoardDetailAPI = async (boardId) => {
   return response.data
 }
 
-export const updateBoardDetailAPI = async (boardId, updateData) => {
+export const updateBoardDetailsAPI = async (boardId, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
   return response.data
 }
@@ -23,8 +23,13 @@ export const fetchAddColumnAPI = async (newColumnData) => {
   return response.data
 }
 
-export const updateColumnDetailAPI = async (columnId, updateData) => {
+export const updateColumnDetailsAPI = async (columnId, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/columns/${columnId}`, updateData)
+  return response.data
+}
+
+export const deleteColumnDetailsAPI = async (columnId) => {
+  const response = await axios.delete(`${API_ROOT}/v1/columns/${columnId}`)
   return response.data
 }
 
