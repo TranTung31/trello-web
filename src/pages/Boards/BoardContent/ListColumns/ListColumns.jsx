@@ -8,7 +8,7 @@ import { useState } from 'react'
 import Column from './Column/Column'
 import { toast } from 'react-toastify'
 
-function ListColumns({ columns, addNewColumn, addNewCard }) {
+function ListColumns({ columns, addNewColumn, addNewCard, deleteColumnDetails }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
@@ -47,7 +47,14 @@ function ListColumns({ columns, addNewColumn, addNewCard }) {
           '&::-webkit-scrollbar-track': { m: 2 }
         }}
       >
-        {columns?.map(column => <Column key={column._id} column={column} addNewCard={addNewCard}/>)}
+        {columns?.map(column =>
+          <Column
+            key={column._id}
+            column={column}
+            addNewCard={addNewCard}
+            deleteColumnDetails={deleteColumnDetails}
+          />)
+        }
 
         {!openNewColumnForm ? (
           <Box

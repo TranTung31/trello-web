@@ -9,13 +9,15 @@ import { useEffect, useState } from 'react'
 import { fetchBoardDetailAPI,
   fetchAddColumnAPI,
   fetchAddCardAPI,
-  updateBoardDetailAPI,
-  updateColumnDetailAPI,
-  moveCardToDifferentColumnAPI
+  updateBoardDetailsAPI,
+  updateColumnDetailsAPI,
+  moveCardToDifferentColumnAPI,
+  deleteColumnDetailsAPI
 } from '~/apis'
 import { mapOrder } from '~/utils/sorts'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import { toast } from 'react-toastify'
 
 function Board() {
   const [board, setBoard] = useState(null)
@@ -98,7 +100,7 @@ function Board() {
 
     // Khi nào call API mà muốn nhận response trả về thì mới async await function moveColumns (.then .catch tương tự)
     // Call API
-    updateBoardDetailAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+    updateBoardDetailsAPI(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
   }
 
   // Khi di chuyển card trong cùng 1 column, chỉ cần gọi API cập nhật lại mảng cardOrderIds của column chứa nó (thay đổi vị trí trong mảng)
@@ -113,7 +115,7 @@ function Board() {
     setBoard(newBoard)
 
     // Call API
-    updateColumnDetailAPI(columnId, { cardOrderIds: dndOrderedCardIds })
+    updateColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds })
   }
 
   /*
@@ -147,6 +149,20 @@ function Board() {
       prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(column => column._id === nextColumnId).cardOrderIds
+    })
+  }
+
+  // Xử lý xóa 1 column và cards bên trong nó
+  const deleteColumnDetails = (columnId) => {
+    // Làm chuẩn dữ liệu state board
+    const newBoard = { ...board }
+    newBoard.columns = newBoard.columns.filter(column => column._id !== columnId)
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
+    setBoard(newBoard)
+
+    // Call API
+    deleteColumnDetailsAPI(columnId).then(res => {
+      toast.success(res.deleteResult)
     })
   }
 
@@ -195,6 +211,7 @@ function Board() {
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   )

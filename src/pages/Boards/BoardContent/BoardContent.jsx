@@ -33,7 +33,8 @@ function BoardContent({
   addNewCard,
   moveColumns,
   moveCardInTheSameColumn,
-  moveCardToDifferentColumn
+  moveCardToDifferentColumn,
+  deleteColumnDetails
 }) {
   // Nếu dùng PointerSensor mặc định thì phải kết hợp thuộc tính CSS touch-action: 'none' ở những phần tử kéo thả nhưng còn bug
 
@@ -257,7 +258,7 @@ function BoardContent({
         })
 
         // console.log('dndOrderedCards: ', dndOrderedCards)
-        console.log('oldColumnWhenDraggingCard: ', oldColumnWhenDraggingCard)
+        // console.log('oldColumnWhenDraggingCard: ', oldColumnWhenDraggingCard)
 
         moveCardInTheSameColumn(dndOrderedCards, dndOrderedCardIds, oldColumnWhenDraggingCard._id)
       }
@@ -354,7 +355,12 @@ function BoardContent({
         bgcolor: (theme) => theme.palette.mode === 'dark' ? '#34495e' : 'primary.main',
         p: '10px 0'
       }}>
-        <ListColumns columns={orderedColumns} addNewColumn={addNewColumn} addNewCard={addNewCard}/>
+        <ListColumns
+          columns={orderedColumns}
+          addNewColumn={addNewColumn}
+          addNewCard={addNewCard}
+          deleteColumnDetails={deleteColumnDetails}
+        />
         <DragOverlay dropAnimation={customDropAnimation}>
           {!activeDragItemType && null}
           {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData}/>}
