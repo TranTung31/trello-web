@@ -1,11 +1,24 @@
-import Board from '~/pages/Boards/_id'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { routes } from '~/routes'
 
 function App() {
   return (
-    <>
-      {/* React Router Dom /boards /boards/{board_id} */}
-      <Board />
-    </>
+    <Router>
+      <Routes>
+        {
+          routes.map((route, index) => {
+            const Page = route.element
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={<Page />}
+              />
+            )
+          })
+        }
+      </Routes>
+    </Router>
   )
 }
 
