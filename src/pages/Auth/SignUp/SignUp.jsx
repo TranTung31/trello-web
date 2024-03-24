@@ -7,7 +7,7 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
 import { toast } from 'react-toastify'
-
+import { useNavigate } from 'react-router-dom'
 
 const STYLES_ICON = {
   width: '40px',
@@ -36,6 +36,7 @@ function SignUp() {
     confirmPassword: ''
   })
   const [errorMessage, setErrorMessage] = useState({})
+  const navigate = useNavigate()
 
   const handleOnChange = (e) => {
     const { value, name } = e.target
@@ -179,7 +180,12 @@ function SignUp() {
           mt={2}
         >
           <Box>Already have an account?</Box>
-          <Box sx={{ color: (theme) => theme.palette.primary.main, cursor: 'pointer' }}>Login!</Box>
+          <Box
+            sx={{ color: (theme) => theme.palette.primary.main, cursor: 'pointer' }}
+            onClick={() => navigate('/login')}
+          >
+            Login!
+          </Box>
         </Box>
       </Box>
     </Box>
