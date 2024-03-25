@@ -38,3 +38,22 @@ export const fetchAddCardAPI = async (newCardData) => {
   const response = await axios.post(`${API_ROOT}/v1/cards`, newCardData)
   return response.data
 }
+
+// Users
+export const registerUserAPI = async (newUser) => {
+  try {
+    const response = await axios.post(`${API_ROOT}/v1/users/register`, newUser)
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}
+
+export const loginUserAPI = async (dataUser) => {
+  try {
+    const response = await axios.post(`${API_ROOT}/v1/users/login`, dataUser)
+    return response.data
+  } catch (error) {
+    return error.response.data
+  }
+}

@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { loginUserAPI } from '~/apis'
 
 const STYLES_ICON = {
   width: '40px',
@@ -45,7 +46,7 @@ function SignIn() {
     })
   }
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     let error = {}
     if (!formData.email.trim()) {
       error.email = 'This field is required!'
@@ -58,8 +59,13 @@ function SignIn() {
     // Register
     if (Object.keys(errorMessage).length === 0 &&
       formData.email && formData.password) {
-      toast.success('Login successfully!')
-      navigate('/')
+      const res = await loginUserAPI(formData)
+      if (res?.status === 'SUCCESS') {
+        setFormData({ email: '', password: '' })
+        toast.success(res?.userMessage)
+        navigate('/')
+      }
+      if (res?.status === 'ERROR') toast.error(res?.userMessage)
     }
   }
 
@@ -70,8 +76,6 @@ function SignIn() {
       delete errorMessage.email
       setErrorMessage({ ...errorMessage })
     }
-
-    if (formData.confirmPassword) setErrorMessage({ ...errorMessage, confirmPassword: '' })
   }, [formData?.email])
 
   useEffect(() => {
