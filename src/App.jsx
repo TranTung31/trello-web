@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { routes } from '~/routes'
+import DefaultLayout from '~/components/DefaultLayout/DefaultLayout'
 
 function App() {
   return (
@@ -12,7 +13,11 @@ function App() {
               <Route
                 key={index}
                 path={route.path}
-                element={<Page />}
+                element={
+                  <DefaultLayout isShowHeader={route.isShowHeader}>
+                    <Page />
+                  </DefaultLayout>
+                }
               />
             )
           })

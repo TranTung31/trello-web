@@ -14,15 +14,20 @@ const STYLES_ICON = {
   width: '40px',
   height: '40px',
   color: '#fff',
-  bgcolor: (theme) => theme.palette.primary.main,
+  bgcolor: (theme) => theme.palette.mode === 'dark' ? '#0984e3' : 'primary.main',
   borderRadius: '50%',
   lineHeight: '52px',
   textAlign: 'center'
 }
 
 const STYLES_TEXT_FIELD = {
+  '& label': { color: (theme) => theme.palette.mode === 'dark' ? '#2d3436' : 'primary.main' },
+  '& input': { color: (theme) => theme.palette.mode === 'dark' ? '#2d3436' : 'primary.main' },
+  '& label.Mui-focused': { color: (theme) => theme.palette.mode === 'dark' ? '#2d3436' : 'primary.main' },
   '& .MuiOutlinedInput-root': {
-    '&:hover fieldset': { borderColor: (theme) => theme.palette.primary.main }
+    '& fieldset': { borderColor: (theme) => theme.palette.mode === 'dark' ? '#2d3436' : 'primary.main' },
+    '&:hover fieldset': { borderColor: (theme) => theme.palette.mode === 'dark' ? '#2d3436' : 'primary.main' },
+    '&.Mui-focused fieldset': { borderColor: (theme) => theme.palette.mode === 'dark' ? '#2d3436' : 'primary.main' }
   }
 }
 
@@ -112,7 +117,7 @@ function SignUp() {
         display: 'flex',
         justifyContent: 'center'
       }}
-      bgcolor={(theme) => theme.palette.primary.light}
+      bgcolor={(theme) => theme.palette.mode === 'dark' ? '#34495e' : 'primary.main'}
     >
       <Box
         sx={{
@@ -140,7 +145,9 @@ function SignUp() {
             <Box sx={STYLES_ICON}><HttpsIcon /></Box>
             <Box sx={STYLES_ICON}><SvgIcon component={TrelloIcon} inheritViewBox/></Box>
           </Box>
-          <Box sx={{ color: (theme) => theme.palette.text.secondary }}>Author: TranTungDev</Box>
+          <Box sx={{ color: (theme) => theme.palette.mode === 'dark' ? '#34495e' : 'text.secondary' }}>
+            Author: TranTungDev
+          </Box>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
@@ -184,9 +191,14 @@ function SignUp() {
           sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}
           mt={2}
         >
-          <Box>Already have an account?</Box>
+          <Box sx={{ color: (theme) => theme.palette.mode === 'dark' ? '#34495e' : '#2c3e50' }}>
+            Already have an account?
+          </Box>
           <Box
-            sx={{ color: (theme) => theme.palette.primary.main, cursor: 'pointer' }}
+            sx={{
+              color: (theme) => theme.palette.mode === 'dark' ? '#0984e3' : 'primary.main',
+              cursor: 'pointer'
+            }}
             onClick={() => navigate('/login')}
           >
             Login!
