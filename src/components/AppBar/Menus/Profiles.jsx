@@ -24,6 +24,11 @@ function Profiles() {
     setAnchorEl(null)
   }
 
+  const handleNavigateMyAccount = () => {
+    navigate('/settings')
+    handleClose()
+  }
+
   return (
     <Box>
       <Tooltip title="Account settings">
@@ -47,10 +52,7 @@ function Profiles() {
           'aria-labelledby': 'basic-button-profile'
         }}
       >
-        <MenuItem>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> Profile
-        </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleNavigateMyAccount}>
           <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> My account
         </MenuItem>
         <Divider />

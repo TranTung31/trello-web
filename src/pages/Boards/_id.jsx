@@ -201,8 +201,8 @@ function Board() {
   return (
     // 100vh là chiều cao tự thay đổi theo độ dài của trình duyệt
     // disableGutters maxWidth={false} giúp chiều rộng của Container chiếm full màn hình
-    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
-      <AppBar />
+    // <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+    <>
       <BoardBar board={board}/>
       <BoardContent
         board={board}
@@ -213,7 +213,8 @@ function Board() {
         moveCardToDifferentColumn={moveCardToDifferentColumn}
         deleteColumnDetails={deleteColumnDetails}
       />
-    </Container>
+    </>
+    // </Container>
   )
 }
 

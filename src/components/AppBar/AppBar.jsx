@@ -20,9 +20,11 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
+  const navigate = useNavigate()
 
   return (
     <Box sx={{
@@ -39,7 +41,10 @@ function AppBar() {
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <AppsIcon sx={{ color: 'white' }}/>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'white' }}>
+        <Box
+          onClick={() => navigate('/')}
+          sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'white', cursor: 'pointer' }}
+        >
           <SvgIcon component={TrelloIcon} inheritViewBox/>
           <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
             Trello
