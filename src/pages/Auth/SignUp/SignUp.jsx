@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import { registerUserAPI } from '~/apis'
 
 const STYLES_ICON = {
   width: '40px',
@@ -46,7 +47,7 @@ function SignUp() {
     })
   }
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     let error = {}
     if (!formData.email.trim()) {
       error.email = 'This field is required!'
@@ -62,7 +63,13 @@ function SignUp() {
     // Register
     if (Object.keys(errorMessage).length === 0 &&
       formData.email && formData.password && formData.confirmPassword) {
-      toast.success('Register successfully!')
+      const res = await registerUserAPI(formData)
+      if (res?.status === 'SUCCESS') {
+        setFormData({ email: '', password: '', confirmPassword: '' })
+        toast.success(res?.userMessage)
+        navigate('/login')
+      }
+      if (res?.status === 'ERROR') toast.error(res?.userMessage)
     }
   }
 
@@ -73,8 +80,6 @@ function SignUp() {
       delete errorMessage.email
       setErrorMessage({ ...errorMessage })
     }
-
-    if (formData.confirmPassword) setErrorMessage({ ...errorMessage, confirmPassword: '' })
   }, [formData?.email])
 
   useEffect(() => {
