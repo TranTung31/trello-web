@@ -10,11 +10,15 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 import * as React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { logout } from '~/redux/slices/authSlice'
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const auth = useSelector((state) => state.auth)
 
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
@@ -29,6 +33,12 @@ function Profiles() {
     handleClose()
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken')
+    dispatch(logout())
+    navigate('/login')
+  }
+
   return (
     <Box>
       <Tooltip title="Account settings">
@@ -40,7 +50,7 @@ function Profiles() {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar sx={{ width: 34, height: 34 }} src='https://fullstack.edu.vn/static/media/f8-icon.18cd71cfcfa33566a22b.png'/>
+          <Avatar sx={{ width: 34, height: 34 }} src={auth.avatar}/>
         </IconButton>
       </Tooltip>
       <Menu
@@ -52,28 +62,38 @@ function Profiles() {
           'aria-labelledby': 'basic-button-profile'
         }}
       >
-        <MenuItem onClick={handleNavigateMyAccount}>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
+        {auth._id &&
+        <Box>
+          <MenuItem onClick={handleNavigateMyAccount}>
+            <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> My account
+          </MenuItem>
+          <Divider />
+          <MenuItem>
+            <ListItemIcon>
+              <PersonAdd fontSize="small" />
+            </ListItemIcon>
+            Add another account
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+          <MenuItem onClick={handleLogout}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
+        </Box>}
+        {auth._id === '' &&
         <MenuItem onClick={() => navigate('/login')}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Logout
-        </MenuItem>
+          Register or Sign in
+        </MenuItem>}
       </Menu>
     </Box>
   )
