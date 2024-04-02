@@ -9,6 +9,8 @@ import Alert from '@mui/material/Alert'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import { loginUserAPI } from '~/apis'
+import { useDispatch } from 'react-redux'
+import { signin } from '~/redux/slices/authSlice'
 
 const STYLES_ICON = {
   width: '40px',
@@ -42,6 +44,7 @@ function SignIn() {
   })
   const [errorMessage, setErrorMessage] = useState({})
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleOnChange = (e) => {
     const { value, name } = e.target
@@ -61,13 +64,14 @@ function SignIn() {
     }
     setErrorMessage(error)
 
-    // Register
+    // Sign in
     if (Object.keys(errorMessage).length === 0 &&
       formData.email && formData.password) {
       const res = await loginUserAPI(formData)
       if (res?.status === 'SUCCESS') {
         setFormData({ email: '', password: '' })
         toast.success(res?.userMessage)
+        dispatch(signin(res?.data))
         navigate('/')
       }
       if (res?.status === 'ERROR') toast.error(res?.userMessage)

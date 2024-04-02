@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { API_ROOT } from '~/utils/constants'
 
+// Tạo 1 axiosJWT
+export const axiosJWT = axios.create()
+
 // Boards
 export const fetchBoardDetailAPI = async (boardId) => {
   const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
@@ -18,8 +21,12 @@ export const moveCardToDifferentColumnAPI = async (updateData) => {
 }
 
 // Columns
-export const fetchAddColumnAPI = async (newColumnData) => {
-  const response = await axios.post(`${API_ROOT}/v1/columns`, newColumnData)
+export const fetchAddColumnAPI = async (newColumnData, token) => {
+  const response = await axiosJWT.post(`${API_ROOT}/v1/columns`, newColumnData, {
+    headers: {
+      token: `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
@@ -56,4 +63,11 @@ export const loginUserAPI = async (dataUser) => {
   } catch (error) {
     return error.response.data
   }
+}
+
+export const refreshTokenAPI = async (token) => {
+  const response = await axios.post(`${API_ROOT}/v1/users/refresh-token`, {
+    refreshToken: token
+  })
+  return response.data
 }

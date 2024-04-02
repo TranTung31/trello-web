@@ -12,15 +12,23 @@ import { fetchBoardDetailAPI,
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
   moveCardToDifferentColumnAPI,
-  deleteColumnDetailsAPI
+  deleteColumnDetailsAPI,
+  refreshTokenAPI
 } from '~/apis'
 import { mapOrder } from '~/utils/sorts'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
+import { signin } from '~/redux/slices/authSlice'
 
 function Board() {
   const [board, setBoard] = useState(null)
+  const auth = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  // let axiosJWT = axios.create()
 
   useEffect(() => {
     const boardId = '65f5ac5e67281a9297c137b6'
@@ -50,23 +58,31 @@ function Board() {
       ...data,
       boardId: board._id
     }
-    const createdColumn = await fetchAddColumnAPI(newColumn)
+    const accessToken = auth.accessToken
+    if (accessToken) {
+      const createdColumn = await fetchAddColumnAPI(newColumn, accessToken)
+      if (createdColumn?.status === 'ERROR') {
+        toast.error(createdColumn?.message)
+      }
 
-    // Tạo Card giữ chỗ khi mảng cards rỗng => tránh việc khi kéo card vô column rỗng gây crash trang
-    if (isEmpty(createdColumn.cards)) {
-      createdColumn.cards.push(generatePlaceholderCard(createdColumn))
-      createdColumn.cardOrderIds.push(generatePlaceholderCard(createdColumn)._id)
+      // Tạo Card giữ chỗ khi mảng cards rỗng => tránh việc khi kéo card vô column rỗng gây crash trang
+      if (isEmpty(createdColumn?.cards)) {
+        createdColumn.cards.push(generatePlaceholderCard(createdColumn))
+        createdColumn.cardOrderIds.push(generatePlaceholderCard(createdColumn)._id)
+      }
+
+      /*
+        - Cập nhật state board
+        - Phía FE tự làm lại state board thay vì gọi lại API fetchBoardDetailAPI
+        - Cách làm này phụ thuộc vào tùy lựa chọn và đặc thù của dự án, có nơi BE sẽ trả về luôn toàn bộ Board dù đây là API tạo Column hay Card đi chăng nữa => FE sẽ nhàn hơn
+      */
+      const newBoard = { ...board }
+      newBoard.columns.push(createdColumn)
+      newBoard.columnOrderIds.push(createdColumn._id)
+      setBoard(newBoard)
+    } else {
+      toast.error('You are not authenticated!')
     }
-
-    /*
-      - Cập nhật state board
-      - Phía FE tự làm lại state board thay vì gọi lại API fetchBoardDetailAPI
-      - Cách làm này phụ thuộc vào tùy lựa chọn và đặc thù của dự án, có nơi BE sẽ trả về luôn toàn bộ Board dù đây là API tạo Column hay Card đi chăng nữa => FE sẽ nhàn hơn
-    */
-    const newBoard = { ...board }
-    newBoard.columns.push(createdColumn)
-    newBoard.columnOrderIds.push(createdColumn._id)
-    setBoard(newBoard)
   }
 
   const addNewCard = async (data) => {
