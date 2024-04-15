@@ -57,12 +57,8 @@ export const registerUserAPI = async (newUser) => {
 }
 
 export const loginUserAPI = async (dataUser) => {
-  try {
-    const response = await axios.post(`${API_ROOT}/v1/users/login`, dataUser)
-    return response.data
-  } catch (error) {
-    return error.response.data
-  }
+  const response = await axios.post(`${API_ROOT}/v1/users/login`, dataUser)
+  return response.data
 }
 
 export const refreshTokenAPI = async (token) => {

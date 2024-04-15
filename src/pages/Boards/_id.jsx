@@ -61,6 +61,11 @@ function Board() {
     const accessToken = auth.accessToken
     if (accessToken) {
       const createdColumn = await fetchAddColumnAPI(newColumn, accessToken)
+
+      if (createdColumn?.statusCode === 422) {
+        toast.error(createdColumn?.message)
+      }
+
       if (createdColumn?.status === 'ERROR') {
         toast.error(createdColumn?.message)
       }
@@ -203,13 +208,14 @@ function Board() {
             </linearGradient>
           </defs>
         </svg>
+
         <CircularProgress
           sx={{
             'svg circle': { stroke: 'url(#my_gradient)' }
           }}
-          size={60}
+          size={35}
         />
-        <h3>Loading Board</h3>
+        <h3>Loading...</h3>
       </Box>
     )
   }
