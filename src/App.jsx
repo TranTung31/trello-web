@@ -10,6 +10,7 @@ function App() {
   const auth = useSelector((state) => state.auth)
   const dispatch = useDispatch()
 
+  // Add a request interceptor
   axiosJWT.interceptors.request.use(
     async (config) => {
       if (auth.accessToken) {

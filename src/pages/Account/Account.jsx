@@ -14,6 +14,7 @@ import { Button } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import { styled } from '@mui/material/styles'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { useSelector } from 'react-redux'
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props
@@ -50,6 +51,7 @@ function a11yProps(index) {
 
 function Account() {
   const [value, setValue] = React.useState(0)
+  const user = useSelector((state) => state.auth)
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
@@ -83,8 +85,8 @@ function Account() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'center' }}>
                 <Avatar
-                  alt="Travis Howard"
-                  src="https://fullstack.edu.vn/static/media/f8-icon.18cd71cfcfa33566a22b.png"
+                  alt="Avatar User"
+                  src=""
                   sx={{ width: 90, height: 90 }}
                 />
                 <Button
@@ -99,15 +101,15 @@ function Account() {
                 </Button>
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Box sx={{ fontSize: '18px', fontWeight: 500 }}>abc display name</Box>
-                <Box>abc user name</Box>
+                <Box sx={{ fontSize: '18px', fontWeight: 500 }}>{user?.displayName}</Box>
+                <Box>{user?.username}</Box>
               </Box>
             </Box>
             <TextField
               disabled
               id="filled-disabled"
               label="Your email"
-              defaultValue="abc@gmail.com"
+              defaultValue={user?.email}
               variant="filled"
               InputProps={{
                 startAdornment: (
@@ -121,7 +123,7 @@ function Account() {
               disabled
               id="filled-disabled"
               label="Your Username"
-              defaultValue="abc"
+              defaultValue={user?.email}
               variant="filled"
               InputProps={{
                 startAdornment: (
@@ -134,7 +136,7 @@ function Account() {
             <TextField
               id="filled-display-name"
               label="Your Display Name"
-              defaultValue="abc"
+              defaultValue={user?.displayName}
               variant="outlined"
               InputProps={{
                 startAdornment: (
